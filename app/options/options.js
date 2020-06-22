@@ -1,7 +1,8 @@
 // Saves options to chrome.storage
 function save_options() {
     chrome.storage.sync.set({
-        stylesheet: document.getElementById('stylesheet').value
+        stylesheet: document.getElementById('stylesheet').value,
+        toc: document.getElementById('toc').checked,
     },  () => {
         alert('Options saved.');
     });
@@ -15,6 +16,7 @@ function restore_options() {
         stylesheet: ''
     }, function (items) {
         document.getElementById('stylesheet').value = items.stylesheet;
+        document.getElementById('toc').checked = items.checked !== false;
     });
 }
 document.addEventListener('DOMContentLoaded', restore_options);

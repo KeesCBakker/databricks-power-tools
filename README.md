@@ -8,9 +8,9 @@ Can be installed from the Chrome Web Store: [link]
 ## Features
 The following features are supported:
 
-- [x] 1.0.0 Style sheet support
-- [x] 1.0.0 Table of contents support
-
+- [x] 1.1.0 Ability to disable Table of contents.
+- [x] 1.0.0 Style sheet support.
+- [x] 1.0.0 Table of contents support.
 
 ## Local development
 Want to tinker around locally, do the following:

@@ -16,6 +16,14 @@ chrome.storage.sync.get("stylesheet", data => {
     }
 });
 
+let toc = true;
+chrome.storage.sync.get("toc", data => {
+    if (data.hasOwnProperty("toc")) {
+        toc = data.toc !== false;
+        locationHashChanged();
+    }
+});
+
 let dv = document.createElement("div");
 document.body.appendChild(dv);
 
@@ -119,7 +127,7 @@ function addStyle(styles) {
 }
 
 function locationHashChanged() {
-    dv.style.display = location.hash.indexOf("#notebook") == -1 ? 'none' : 'block';
+    dv.style.display = !toc || location.hash.indexOf("#notebook") == -1 ? 'none' : 'block';
 
     if (dv.style.display == 'block') {
         refresh();
