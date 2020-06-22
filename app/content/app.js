@@ -28,7 +28,6 @@ dv.innerHTML = `<strong>Table of contents</strong>
 <a>refresh</a>`;
 
 let ol = dv.getElementsByTagName("ol")[0];
-console.log(ol);
 let a = dv.children[dv.children.length - 1];
 a.onclick = () => refresh();
 
@@ -40,7 +39,7 @@ addStyle(`
 	background: #fff;
 	position: absolute;
 	top: 12px;
-	right: 100px;
+	right: 130px;
     max-width: 250px;
     text-align:right;
 }
@@ -77,6 +76,14 @@ addStyle(`
 	display: block
 }
 
+.heading-command-wrapper:before {
+    content:'';
+    visibility:hidden;
+    margin-top:-80px;
+    height:80px;
+    display:block;
+}
+
 `);
 
 function refresh() {
@@ -100,7 +107,8 @@ function refresh() {
 
     // only update when changed :-)
     if (ol.innerHTML !== fol.innerHTML) {
-        ol.innerHTML = fol.innerHTML;
+        ol.innerHTML = "";
+        [...fol.children].forEach(c => ol.appendChild(c));
     }
 }
 
