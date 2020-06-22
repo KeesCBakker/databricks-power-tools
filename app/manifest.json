@@ -9,18 +9,13 @@
     },
     "content_scripts": [
         {
-            "matches": [ "*://*/*" ],
-            "include_globs": [
-                "*://*.databricks.com/*"
-            ],
+            "matches": [ "https://*.cloud.databricks.com/*" ],
             "js": [
                 "content/app.js"
             ]
         }
     ],
     "permissions": [
-        "activeTab",
-        "tabs",
         "storage"
     ],
     "options_page": "options/options.html"
