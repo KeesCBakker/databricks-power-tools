@@ -29,7 +29,7 @@ readFromStore("toc", true, x => {
 });
 
 let scrollOnHover = true;
-readFromStore("soh", true, x => {
+readFromStore("soh", false, x => {
     scrollOnHover = x;
     refresh();
 });
@@ -43,13 +43,9 @@ dv.onmouseenter = () => refresh();
 dv.innerHTML = `<strong>Table of contents</strong>
 <div class="inner">
     <ol></ol>
-</div>
-<a>refresh</a>`;
+</div>`;
 
 let ol = dv.getElementsByTagName("ol")[0];
-let a = dv.children[dv.children.length - 1];
-a.onclick = () => refresh();
-
 
 addStyle(`
 
@@ -85,21 +81,19 @@ addStyle(`
 	padding: 3px
 }
 
-#kaas .inner,
-#kaas > a {
+#kaas .inner {
 	display: none
 }
 
-#kaas:hover .inner,
-#kaas:hover > a {
+#kaas:hover .inner {
 	display: block
 }
 
 .heading-command-wrapper:before {
     content:'';
     visibility:hidden;
-    margin-top:-80px;
-    height:80px;
+    margin-top:-73px;
+    height:73px;
     display:block;
 }
 
