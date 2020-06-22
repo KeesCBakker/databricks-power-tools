@@ -43,6 +43,7 @@ dv.onmouseenter = () => refresh();
 dv.innerHTML = `<strong>Table of contents</strong>
 <div class="inner">
     <ol></ol>
+    <div class="empty-msg">No headings found...</div>
 </div>`;
 
 let ol = dv.getElementsByTagName("ol")[0];
@@ -65,6 +66,8 @@ addStyle(`
     overflow-y: none;
     display:block;
     text-align:left;
+    padding:4px;
+    padding-right:8px;
 }
 
 #kaas .inner::-webkit-scrollbar {
@@ -76,17 +79,49 @@ addStyle(`
     border-radius: 2px;
 }
 
+#kaas ol {
+    margin-bottom:0px;
+}
+
+#kaas .empty-msg,
+#kaas .inner {
+	display: none
+}
+
+#kaas a {
+    display:inline-block;
+    vertical-align: top;
+}
+
+#kaas a:hover {
+    color:red;
+}
+
 #kaas:hover {
 	border: solid 1px #eee;
 	padding: 3px
 }
 
-#kaas .inner {
-	display: none
-}
-
 #kaas:hover .inner {
 	display: block
+}
+
+#kaas:hover strong {
+    border-bottom:solid 1px #eee;
+    display: block;
+    margin-bottom:2px;
+    padding-bottom:2px;
+    cursor:pointer;
+}
+
+#kaas.empty:hover .empty-msg {
+    display:block;
+    font-style:italic;
+    color:#999;
+}
+
+#kaas.empty:hover ol {
+    display:none;
 }
 
 .heading-command-wrapper:before {
@@ -133,6 +168,8 @@ function refresh() {
         ol.innerHTML = "";
         [...fol.children].forEach(c => ol.appendChild(c));
     }
+
+    dv.classList.toggle("empty", ol.childElementCount == 0);
 }
 
 function addStyle(styles) {
@@ -143,7 +180,6 @@ function addStyle(styles) {
 
 function locationHashChanged() {
     dv.style.display = !toc || location.hash.indexOf("#notebook") == -1 ? 'none' : 'block';
-
     if (dv.style.display == 'block') {
         refresh();
         for (var i = 1; i < 20; i++) {
