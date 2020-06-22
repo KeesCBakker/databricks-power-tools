@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "Databricks Power Tools",
+    "description": "Adds features to Databricks: table of contents and a stylesheet.",
+    "version": "1.0.0",
+    "icons": {
+        "128": "resources/icon_small.png",
+        "512": "resources/icon.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [ "*://*/*" ],
+            "include_globs": [
+                "*://*.databricks.com/*"
+            ],
+            "js": [
+                "content/app.js"
+            ]
+        }
+    ],
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "storage"
+    ],
+    "options_page": "options/options.html"
+}
