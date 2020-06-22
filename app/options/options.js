@@ -1,9 +1,11 @@
 // Saves options to chrome.storage
 function save_options() {
+
     chrome.storage.sync.set({
-        stylesheet: document.getElementById('stylesheet').value,
         toc: document.getElementById('toc').checked,
-    },  () => {
+        soh: document.getElementById('soh').checked,
+        stylesheet: document.getElementById('stylesheet').value
+    }, () => {
         alert('Options saved.');
     });
 }
@@ -13,11 +15,16 @@ function save_options() {
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
     chrome.storage.sync.get({
-        stylesheet: ''
+        stylesheet: '',
+        toc: true,
+        soh: true
     }, function (items) {
+        console.log(items);
         document.getElementById('stylesheet').value = items.stylesheet;
-        document.getElementById('toc').checked = items.checked !== false;
+        document.getElementById('toc').checked = items.toc;
+        document.getElementById('soh').checked = items.soh;
     });
 }
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click', save_options);

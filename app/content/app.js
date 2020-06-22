@@ -1,28 +1,39 @@
-const escapeHTML = str => str.replace(/[&<>'"]/g,
-    tag => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;'
-    }[tag]));
+function readFromStore(property, defaultValue, action) {
 
-chrome.storage.sync.get("stylesheet", data => {
-    if (data.hasOwnProperty("stylesheet")) {
-        let styles = data.stylesheet;
-        if (styles) {
-            addStyle(styles);
+    chrome.storage.sync.get(property, data => {
+
+        console.log(data);
+
+        if (data.hasOwnProperty(property)) {
+            console.log("Property exists");
+            value = data[property];
         }
+        else {
+            value = defaultValue;
+        }
+
+        action(value);
+    });
+}
+
+readFromStore("stylesheet", null, styles => {
+    if (styles) {
+        addStyle(styles);
     }
 });
 
 let toc = true;
-chrome.storage.sync.get("toc", data => {
-    if (data.hasOwnProperty("toc")) {
-        toc = data.toc !== false;
-        locationHashChanged();
-    }
+readFromStore("toc", true, x => {
+    toc = x;
+    locationHashChanged();
 });
+
+let scrollOnHover = true;
+readFromStore("soh", true, x => {
+    scrollOnHover = x;
+    refresh();
+});
+
 
 let dv = document.createElement("div");
 document.body.appendChild(dv);
@@ -109,6 +120,16 @@ function refresh() {
                 block: 'start'
             });
         };
+
+        if (scrollOnHover) {
+            ea.className = "with-hover";
+            ea.onmouseenter = function () {
+                ex1.closest('.heading-command-wrapper').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            };
+        }
 
         return li
     }).forEach(li => fol.appendChild(li));
