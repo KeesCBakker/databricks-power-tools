@@ -17,7 +17,7 @@ function restore_options() {
     chrome.storage.sync.get({
         stylesheet: '',
         toc: true,
-        soh: true
+        soh: false
     }, function (items) {
         console.log(items);
         document.getElementById('stylesheet').value = items.stylesheet;
