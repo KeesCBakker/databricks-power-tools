@@ -1,9 +1,13 @@
+/**
+ *  Utilities.
+ */
+
+
 function readFromStore(property, defaultValue, action) {
 
     chrome.storage.sync.get(property, data => {
 
         if (data.hasOwnProperty(property)) {
-            console.log("Property exists");
             value = data[property];
         }
         else {

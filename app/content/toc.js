@@ -1,32 +1,16 @@
-let toc = true;
-readFromStore("toc", true, x => {
-    toc = x;
-    locationHashChanged();
-});
-
-let scrollOnHover = true;
-readFromStore("soh", false, x => {
-    scrollOnHover = x;
-    refresh();
-});
+/**
+ *  Renders the Table of Contents.
+ */
 
 
-let dv = document.createElement("div");
-document.body.appendChild(dv);
-
-dv.id = "kaas";
-dv.onmouseenter = () => refresh();
-dv.innerHTML = `<strong>Table of contents</strong>
-<div class="inner">
-    <ol></ol>
-    <div class="empty-msg">No headings found...</div>
-</div>`;
-
-let ol = dv.getElementsByTagName("ol")[0];
-
+// we make a stylesheet on the fly:
 addStyle(`
 
 #kaas {
+    display:none;
+}
+
+.kaas-active #kaas {
     padding: 4px;
 	background: #fff;
 	position: absolute;
@@ -34,6 +18,7 @@ addStyle(`
 	right: 10px;
     max-width: 250px;
     text-align:right;
+    display:block;
 }
 
 #kaas .inner {
@@ -114,57 +99,68 @@ addStyle(`
 
 `);
 
-function refresh() {
 
-    let fol = document.createElement("ol");
+function locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover) {
 
-    [...document.querySelectorAll('.heading-command-wrapper h1, .heading-command-wrapper h2, .heading-command-wrapper h3, .heading-command-wrapper h4, .notebook-command-title input')].map(ex1 => {
-        var li = document.createElement('li');
-        var ea = document.createElement('a');
-        li.appendChild(ea);
-        ea.innerText = ex1.nodeName == "INPUT" ? ex1.value : ex1.innerText;
-        ea.onclick = function () {
-            scrollTo(ex1);
-        };
+    function refresh() {
 
-        if (scrollOnHover) {
-            ea.className = "with-hover";
-            ea.onmouseenter = function () {
-                scrollTo(ex1);
+        let fakeOrderedList = document.createElement("ol");
+
+        [...document.querySelectorAll('.heading-command-wrapper h1, .heading-command-wrapper h2, .heading-command-wrapper h3, .heading-command-wrapper h4, .notebook-command-title input')].map(ex1 => {
+            var li = document.createElement('li');
+            var ea = document.createElement('a');
+            li.appendChild(ea);
+            ea.innerText = ex1.nodeName == "INPUT" ? ex1.value : ex1.innerText;
+            ea.onclick = function () {
+                let w = ex1.closest('.heading-command-wrapper');
+                scrollTo(w);
             };
+
+            if (scrollOnHover) {
+                ea.className = "with-hover";
+                ea.onmouseenter = function () {
+                    let w = ex1.closest('.heading-command-wrapper');
+                    scrollTo(w);
+                };
+            }
+
+            return li
+        }).forEach(li => fakeOrderedList.appendChild(li));
+
+        // only update when changed :-)
+        if (orderedList.innerHTML !== fakeOrderedList.innerHTML) {
+            orderedList.innerHTML = "";
+            [...fakeOrderedList.children].forEach(c => orderedList.appendChild(c));
         }
 
-        return li
-    }).forEach(li => fol.appendChild(li));
-
-    // only update when changed :-)
-    if (ol.innerHTML !== fol.innerHTML) {
-        ol.innerHTML = "";
-        [...fol.children].forEach(c => ol.appendChild(c));
+        mainDiv.classList.toggle("empty", orderedList.childElementCount == 0);
     }
 
-    dv.classList.toggle("empty", ol.childElementCount == 0);
-}
 
-function locationHashChanged() {
+    let active = isActiveToc && document.location.hash.indexOf("#notebook") != -1;
 
-
-    let active = toc && document.location.hash.indexOf("#notebook") != -1;
-    dv.style.display = active ? 'block' : 'none';
-
+    // make sure styling kicks in:
     document.body.classList.toggle("kaas-active", active);
 
     if (active) {
+
         refresh();
+
+        // reload a few times as Databricks might load slow
+        // TOC is only refreshed if a real change is detected
         for (var i = 1; i < 20; i++) {
-            setTimeout(refresh, 500 * i);
+            setTimeout(() => refresh(), 500 * i);
         }
     }
 }
 
 function scrollTo(element) {
+
+    // activate the scrolling class, so the :before 
+    // links are activated and the scroll will land
+    // on the right position
     document.body.classList.add("scrolling");
-    element.closest('.heading-command-wrapper').scrollIntoView({
+    element.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
     });
@@ -172,6 +168,35 @@ function scrollTo(element) {
 }
 
 
-locationHashChanged();
-window.addEventListener('DOMContentLoaded', locationHashChanged, false);
-window.addEventListener('hashchange', locationHashChanged, false);
+let isActiveToc = true;
+let scrollOnHover = true;
+
+let mainDiv = document.createElement("div");
+document.body.appendChild(mainDiv);
+
+mainDiv.id = "kaas";
+mainDiv.innerHTML = `<strong>Table of contents</strong>
+<div class="inner">
+    <ol></ol>
+    <div class="empty-msg">No headings found...</div>
+</div>`;
+
+let orderedList = mainDiv.getElementsByTagName("ol")[0];
+
+// load settings from store
+readFromStore("toc", true, x => {
+    isActiveToc = x;
+    locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover);
+});
+readFromStore("soh", false, x => {
+    scrollOnHover = x;
+    locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover);
+});
+
+// refresh on enter of the menu
+mainDiv.onmouseenter = () => locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover);
+
+// init
+locationHashChanged(isActiveToc, mainDiv, orderedList);
+window.addEventListener('DOMContentLoaded', () => locationHashChanged(isActiveToc, mainDiv, orderedList), false);
+window.addEventListener('hashchange', () => locationHashChanged(isActiveToc, mainDiv, orderedList), false);
