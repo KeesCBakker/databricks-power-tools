@@ -11,7 +11,9 @@
         {
             "matches": [ "https://*.cloud.databricks.com/*" ],
             "js": [
-                "content/app.js"
+                "content/utils.js",
+                "content/stylesheet.js",
+                "content/toc.js"
             ]
         }
     ],
