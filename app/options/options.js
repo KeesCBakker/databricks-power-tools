@@ -10,10 +10,13 @@ function save_options() {
     });
 }
 
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
 function restore_options() {
-    // Use default value color = 'red' and likesColor = true.
+
+    let details = chrome.app.getDetails();
+    document.getElementById('version').innerText = details.version;
+    document.getElementById('name').innerText = details.name;
+    document.title = document.getElementsByTagName("h1")[0].innerText;
+
     chrome.storage.sync.get({
         stylesheet: '',
         toc: true,
@@ -23,6 +26,7 @@ function restore_options() {
         document.getElementById('toc').checked = items.toc;
         document.getElementById('soh').checked = items.soh;
     });
+
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);

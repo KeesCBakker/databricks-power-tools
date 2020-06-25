@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Databricks Power Tools options</title>
   <style>
     table * {
       vertical-align: top;
@@ -14,10 +13,16 @@
     label {
       cursor: pointer;
     }
+
+    .logo {
+      height: 1.5em;
+      margin-right: 0.5em;
+      float: left;
+    }
   </style>
 </head>
 <body>
-  <h1>Databricks Power Tools options</h1>
+  <h1><img src="../resources/icon_small.png" alt="Logo" class="logo" /><span id="name"></span> v<span id="version"></span></h1>
   <table>
     <tr><td colspan="2"><strong>Table of contents</strong></td></tr>
     <tr>
@@ -48,6 +53,17 @@
   </table>
   <br/>
   <button id="save">Save</button>
+
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+
+  Written by <a target="_new" href="https://keestalkstech.com">Kees C. Bakker</a> 
+  and <a target="_new" href="https://www.linkedin.com/in/jesse-bouwman-610b49a5">Jesse Bouwman</a>.
+  Want to contribute? <a href="https://github.com/KeesCBakker/databricks-power-tools" target="_new">Check GitHub</a>.
+
+
   <script src="options.js"></script>
 </body>
 </html>
