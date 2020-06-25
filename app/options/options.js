@@ -19,7 +19,6 @@ function restore_options() {
         toc: true,
         soh: false
     }, function (items) {
-        console.log(items);
         document.getElementById('stylesheet').value = items.stylesheet;
         document.getElementById('toc').checked = items.toc;
         document.getElementById('soh').checked = items.soh;
