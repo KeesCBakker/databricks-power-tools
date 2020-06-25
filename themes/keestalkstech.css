@@ -1,0 +1,53 @@
+/* replace font on all editors */
+@import url('https://fonts.googleapis.com/css?family=Fira+Code&display=swap');
+.codemirror-preview span, .CodeMirror-code span {
+    font-family: 'Fira Code', 'Droid Sans Mono', 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    cursor: text;
+    color: #777;
+}
+
+/* recolor @udf, method names and build in names */
+.cm-builtin, .cm-meta, .cm-def {
+    color: purple !important;
+    font-weight: bold;
+}
+
+/* properties and function calls */
+.cm-property {
+    color: #ff0096 !important;
+}
+
+/* stuff like def, import, as */
+.cm-keyword {
+    color: #0096fa !important;
+}
+
+/* variables, parameters */
+.cm-variable {
+    box-shadow: inset 0 -3px 0 rgba(120, 120, 120, .076);
+}
+
+/* hovering over lines */
+.CodeMirror-line:hover {
+    background-color: rgba(200, 200, 200, 0.1)
+}
+
+.codemirror-preview span span:hover, .CodeMirror-code span span:hover {
+    background-color: rgba(0, 150, 250, 0.076)
+}
+
+/* comments should not distract us from the code */
+.cm-comment {
+    color: #969696 !important;
+}
+
+/* green string */
+.cm-string {
+    color: green !important;
+}
+
+/* make bash scripts black */
+.CodeMirror-line span {
+    color: black;
+}

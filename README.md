@@ -2,7 +2,11 @@
 A Chrome Extension to add more features to to Databricks.
 
 ## Installation
-Can be installed from the Chrome Web Store: [link]
+Can be installed from the Chrome Web Store: https://chrome.google.com/webstore/detail/databricks-power-tools/mpffpmajkdieodggkakklfkghdiafhpo
+
+
+## Looking for a stylesheet?
+Check the <a href="themes/">themes folder</a>.
 
 
 ## Features
