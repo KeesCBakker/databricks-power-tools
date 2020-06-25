@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Databricks Power Tools",
     "description": "Adds features to Databricks: table of contents and a stylesheet.",
-    "version": "1.1.2",
+    "version": "1.1.4",
     "icons": {
         "128": "resources/icon_small.png",
         "512": "resources/icon.png"
