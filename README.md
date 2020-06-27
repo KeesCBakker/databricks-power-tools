@@ -12,6 +12,7 @@ Check the <a href="themes/">themes folder</a>.
 ## Features
 The following features are supported:
 
+- [x] 1.2.0 Added URL pattern match for Azure Databricks domains.
 - [x] 1.1.0 Scroll on hover of the Table of contents.
 - [x] 1.1.0 Ability to disable Table of contents.
 - [x] 1.0.0 Style sheet support.
