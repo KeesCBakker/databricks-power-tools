@@ -2,14 +2,16 @@
     "manifest_version": 2,
     "name": "Databricks Power Tools",
     "description": "Adds features to Databricks: table of contents and a stylesheet.",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "icons": {
         "128": "resources/icon_small.png",
         "512": "resources/icon.png"
     },
     "content_scripts": [
         {
-            "matches": [ "https://*.cloud.databricks.com/*", "https://*.azuredatabricks.net/*" ],
+            "matches": [ 
+                "https://*.cloud.databricks.com/*", 
+                "https://*.azuredatabricks.net/*" ],
             "js": [
                 "content/utils.js",
                 "content/stylesheet.js",
