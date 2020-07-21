@@ -12,11 +12,12 @@ Check the <a href="themes/">themes folder</a>.
 ## Features
 The following features are supported:
 
+- [x] 1.1.6 The first header (h1-h9) of each cell is added to the Table of Contents.
 - [x] 1.1.5 Support for Databricks on Azure.
-- [x] 1.1.0 Scroll on hover of the Table of contents.
-- [x] 1.1.0 Ability to disable Table of contents.
+- [x] 1.1.0 Scroll on hover of the Table of Contents.
+- [x] 1.1.0 Ability to disable Table of Contents.
 - [x] 1.0.0 Style sheet support.
-- [x] 1.0.0 Table of contents support.
+- [x] 1.0.0 Table of Contents support.
 
 ## Local development
 Want to tinker around locally, do the following:

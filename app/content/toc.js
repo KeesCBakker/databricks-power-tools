@@ -88,8 +88,8 @@ addStyle(`
 .scrolling .heading-command-wrapper:before {
     content:'';
     visibility:hidden;
-    margin-top:-73px;
-    height:73px;
+    margin-top:-18px;
+    height:18px;
     display:block;
 }
 
@@ -100,17 +100,42 @@ addStyle(`
 `);
 
 
+
+function findHeader(ex1) {
+    for (let nr of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+        let selector = 'h' + nr;
+        element = ex1.querySelector(selector);
+        if (element) {
+            return element;
+        }
+    }
+    return null;
+}
+
+
 function locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover) {
 
     function refresh() {
 
         let fakeOrderedList = document.createElement("ol");
 
-        [...document.querySelectorAll('.heading-command-wrapper h1, .heading-command-wrapper h2, .heading-command-wrapper h3, .heading-command-wrapper h4, .notebook-command-title input')].map(ex1 => {
+        [...document.querySelectorAll('.heading-command-wrapper, .notebook-command-title input')].map(ex1 => {
+
+            if (ex1.nodeName != "INPUT") {
+                ex1 = findHeader(ex1);
+            }
+
+            if (!ex1) return null;
+
+            text = ex1.nodeName == "INPUT" ? ex1.value : ex1.innerText;
+
+            if (!text)
+                return null;
+
             var li = document.createElement('li');
             var ea = document.createElement('a');
             li.appendChild(ea);
-            ea.innerText = ex1.nodeName == "INPUT" ? ex1.value : ex1.innerText;
+            ea.innerText = text
             ea.onclick = function () {
                 let w = ex1.closest('.heading-command-wrapper');
                 scrollTo(w);
@@ -125,7 +150,9 @@ function locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover) {
             }
 
             return li
-        }).forEach(li => fakeOrderedList.appendChild(li));
+        })
+            .filter(li => li)
+            .forEach(li => fakeOrderedList.appendChild(li));
 
         // only update when changed :-)
         if (orderedList.innerHTML !== fakeOrderedList.innerHTML) {
