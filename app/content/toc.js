@@ -41,6 +41,7 @@ addStyle(`
 }
 
 #kaas ol {
+    padding-inline-start: 10px;
     margin-bottom:0px;
 }
 
@@ -99,17 +100,62 @@ addStyle(`
 
 `);
 
+function last(arr) {
+    return arr[arr.length - 1]
+}
 
+function handleSubArray(subArr, arr, newItem) {
+    if (!Array.isArray(subArr[0]) && subArr[0].level == newItem.level) {
+        return [...arr, [...subArr, newItem]]
+    } else if (!Array.isArray(last(subArr)) && last(subArr).level == newItem.level) {
+        return [...arr, [...subArr, newItem]]
+    } else if (!Array.isArray(last(subArr)) && newItem.level > last(subArr).level) {
+        return [...arr, [...subArr, [newItem]]]
+    } else if (!Array.isArray(last(subArr)) && newItem.level < last(subArr).level && !Array.isArray(last(arr)) && newItem.level >= last(arr).level) {
+        return [...arr, [...subArr], [newItem]]
+    } else if (Array.isArray(last(subArr))) {
+        return [...arr, handleSubArray(last(subArr), subArr.slice(0, -1), newItem)]
+    }
+}
+
+function levels(base) {
+    const final = base.reduce((arr, newItem) => {
+        if (arr.length === 0) {
+            return [newItem]
+        }
+
+        const l = last(arr)
+        const b = arr.slice(0, -1)
+
+        if (Array.isArray(l)) {
+            return handleSubArray(l, b, newItem)
+        } else {
+            if (newItem.level > l.level) {
+                return [...b, [l, [newItem]]]
+            } else if (newItem.level == l.level) {
+                return [...b, [l, newItem]]
+            } else {
+                console.log('Table of contents order does not start with the highest level. Skipping indentation.')
+            }
+        }
+    }, [])
+
+    if (base.length === 1) {
+        return final
+    } else {
+        return final[0]
+    }
+}
 
 function findHeader(ex1) {
     for (let nr of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
         let selector = 'h' + nr;
         element = ex1.querySelector(selector);
         if (element) {
-            return element;
+            return [element, nr];
         }
     }
-    return null;
+    return [null, 0];
 }
 
 
@@ -119,10 +165,13 @@ function locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover) {
 
         let fakeOrderedList = document.createElement("ol");
 
-        [...document.querySelectorAll('.heading-command-wrapper, .notebook-command-title input')].map(ex1 => {
+        const _headers = [...document.querySelectorAll('.heading-command-wrapper, .notebook-command-title input')].map(ex1 => {
+            let level = 1;
 
             if (ex1.nodeName != "INPUT") {
-                ex1 = findHeader(ex1);
+                let h = findHeader(ex1);
+                ex1 = h[0];
+                level = h[1];
             }
 
             if (!ex1) return null;
@@ -135,7 +184,7 @@ function locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover) {
             var li = document.createElement('li');
             var ea = document.createElement('a');
             li.appendChild(ea);
-            ea.innerText = text
+            ea.innerText = text;
             ea.onclick = function () {
                 let w = ex1.closest('.heading-command-wrapper');
                 scrollTo(w);
@@ -149,10 +198,37 @@ function locationHashChanged(isActiveToc, mainDiv, orderedList, scrollOnHover) {
                 };
             }
 
-            return li
+            return { level: level, value: li }
         })
             .filter(li => li)
-            .forEach(li => fakeOrderedList.appendChild(li));
+
+        const levelSet = new Set(_headers.map((x) => x.level))
+        const levelList = Array(levelSet.size).fill().map((_, i) => i + 1)
+        const levelMap = [...levelSet].sort((a, b) => a - b).map((x, idx) => ({ v: x, l: levelList[idx] }))
+
+        const headers = _headers
+            .map((h) => ({ level: levelMap.find((x) => x.v === h.level).l, value: h.value }))
+
+        function setupList(liOrArray, list) {
+            if (Array.isArray(liOrArray)) {
+                const ol = document.createElement('ol');
+                liOrArray.forEach((x) => {
+                    setupList(x, ol)
+                })
+                list.appendChild(ol)
+            } else {
+                list.appendChild(liOrArray.value)
+            }
+        }
+        var _levels = headers
+        try {
+            _levels = levels(headers)
+        } catch {}
+
+        _levels
+            .forEach(liOrArray => {
+                setupList(liOrArray, fakeOrderedList)
+            });
 
         // only update when changed :-)
         if (orderedList.innerHTML !== fakeOrderedList.innerHTML) {
