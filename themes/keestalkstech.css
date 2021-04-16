@@ -51,3 +51,9 @@
 .CodeMirror-line span {
     color: black;
 }
+
+/* make autocomplete box not truncate */
+ul.CodeMirror-hints .CodeMirror-hint.jedi .display-text {
+    max-width: initial;
+}
+
